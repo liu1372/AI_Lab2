@@ -1,6 +1,7 @@
 public class Node{
     
     int[] state;
+
     //Node parent;
     //Node child;
     //init for root
