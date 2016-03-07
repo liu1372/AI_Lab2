@@ -1,224 +1,220 @@
+
 public final class MiniMax{
-
-    public static int isTerminal(Node n){
+    
+    //The node class
+    public static class Node {
+        char[] state;
+        //init method for Node;
+        public Node() {
+            this.state = new char[9];
+        }
+    }
+    
+    //terminal method which check the terminal
+    //0, for not terminal, 1 for player 1, 2 for player 2, 3 for even
+    public static int terminal(Node n){
         int result = 0;
-        int[] s = new int[9];
-        s = n.state;
-        if((s[0] == s[1]) && (s[0] == s[2]) && (s[0] != 0)){
-            result =  s[0];
-        }else if((s[3] == s[4]) && (s[3] == s[5]) && (s[3] != 0)){
-            result =  s[3];
-        }else if((s[6] == s[7]) && (s[6] == s[8]) && (s[6] != 0)){
-            result =  s[6];
-        }else if((s[0] == s[3]) && (s[0] == s[6]) && (s[0] != 0)){
-            result =  s[0];
-        }else if((s[1] == s[4]) && (s[1] == s[7]) && (s[1] != 0)){
-            result =  s[1];
-        }else if((s[2] == s[5]) && (s[2] == s[8]) && (s[2] != 0)){
-            result =  s[2];
-        }else if((s[0] == s[4]) && (s[0] == s[8]) && (s[0] != 0)){
-            result =  s[0];
-        }else if((s[2] == s[4]) && (s[2] == s[6]) && (s[2] != 0)){
-            result =  s[2];
-        }else {
-            result =  3;
-            for (int i = 0; i < 9;i++){
-                if(s[i] == 0){
-                    result =0;
+        if((n.state[0] == n.state[1]) && (n.state[1] == n.state[2])&& (n.state[0] == 'x')){
+            result = 1;
+        }else if((n.state[0] == n.state[1]) && (n.state[1] == n.state[2])&& (n.state[0] == 'o')){
+            result = 2;
+        }else if((n.state[3] == n.state[4]) && (n.state[4] == n.state[5])&& (n.state[3] == 'x')){
+            result = 1;
+        }else if((n.state[3] == n.state[4]) && (n.state[4] == n.state[5])&& (n.state[3] == 'o')){
+            result = 2;
+        }else if((n.state[6] == n.state[7]) && (n.state[7] == n.state[8])&& (n.state[6] == 'x')){
+            result = 1;
+        }else if((n.state[6] == n.state[7]) && (n.state[7] == n.state[8])&& (n.state[6] == 'o')){
+            result = 2;
+        }else if((n.state[0] == n.state[3]) && (n.state[3] == n.state[6])&& (n.state[3] == 'x')){
+            result = 1;
+        }else if((n.state[0] == n.state[3]) && (n.state[3] == n.state[6])&& (n.state[3] == 'o')){
+            result = 2;
+        }else if((n.state[1] == n.state[4]) && (n.state[4] == n.state[7])&& (n.state[4] == 'x')){
+            result = 1;
+        }else if((n.state[1] == n.state[4]) && (n.state[4] == n.state[7])&& (n.state[4] == 'o')){
+            result = 2;
+        }else if((n.state[2] == n.state[5]) && (n.state[5] == n.state[8])&& (n.state[2] == 'x')){
+            result = 1;
+        }else if((n.state[2] == n.state[5]) && (n.state[5] == n.state[8])&& (n.state[2] == 'o')){
+            result = 2;
+        }else if((n.state[0] == n.state[4]) && (n.state[4] == n.state[8])&& (n.state[4] == 'x')){
+            result = 1;
+        }else if((n.state[0] == n.state[4]) && (n.state[4] == n.state[8])&& (n.state[4] == 'o')){
+            result = 2;
+        }else if((n.state[2] == n.state[4]) && (n.state[4] == n.state[6])&& (n.state[4] == 'x')){
+            result = 1;
+        }else if((n.state[2] == n.state[4]) && (n.state[4] == n.state[6])&& (n.state[4] == 'o')){
+            result = 2;
+        }else{
+            int numberOfempty =0;
+            for (int i = 0; i < 9; i++){
+                if (n.state[i] == '.'){
+                    numberOfempty ++;
                 }
             }
+            if (numberOfempty == 0){
+                result = 3;
+            }
         }
-        
         return result;
     }
     
-    
-    //get the score for player 1
-    public static int utility(int result){
-        if (result == 1){
-            return 10;
-        }else if(result ==2){
-            return -10;
-        }else{
-            return 0;
-        }
-    }
-    //get the state of child of current node
-    public static int[] getStateOfChild(Node n){
-        int k = 0;
-        for( int i =0; i< 9;i++){
-            if (n.state[i] == 0){
-                k++;
-            }
-        }
-        int[] result = new int[k];
-        int j =0;
-        for (int i = 0; i < 9;i++){
-            if (n.state[i] == 0){
-                result[j] = i;
-                j++;
-            }
-        }
-        return result;
-        
-    }
-    //Max method return the utility for an action
-    public static int max(Node node){
-    	Node n = new Node();
-    	n.state = node.state;
-        int utilityValue = -11;
-        int result = isTerminal(n);
-        int num = 0;
-        int temp = -11;
-        
-        if ( result != 0){
-            utilityValue = utility(result);
-        }else{
-            num = getStateOfChild(n).length;
-            int[] stateArray = new int[num];
-            stateArray = getStateOfChild(n);
-            for(int i = 0; i < num; i++){
-                Node child = new Node();
-                child.state = n.state;
-                child.state[stateArray[i]] = 1;
-                temp = min(child);
-                if (temp > utilityValue){
-                    utilityValue = temp;
-                }
-            }
-        }
-        return utilityValue;
-    }
-    
-    //Min method return the utility for an action
-    public static int min(Node node){
-    	Node n = new Node();
-    	n.state = node.state;
-        int utilityValue = 11;
-        int result = isTerminal(n);
-        int num = 0;
-        int temp = 11;
-        
-        
-        if ( result != 0){
-            utilityValue = utility(result);
-        }else{
-            num = getStateOfChild(n).length;
-            int[] stateArray = new int[num];
-            stateArray = getStateOfChild(n);
-            for(int i = 0; i < num; i++){
-                Node child = new Node();
-                child.state = n.state;
-                child.state[stateArray[i]] = 2;
-                temp = max(child);
-                if (temp < utilityValue){
-                    utilityValue = temp;
-                }
-            }
-        }
-        return utilityValue;
-    }
-    
-    //print state for a node
-    public static void printNode(Node n){
-        for (int i = 0; i < 9;i++){
-            if (n.state[i] == 1){
-                System.out.print("x");
-            }else if(n.state[i] == 2){
-                System.out.print("O");
+    // Max method, return max utility value
+    public static int max(Node n){
+        int result =-11;
+        Node pMax = new Node();
+        pMax.state = n.state.clone();
+        if(terminal(pMax) != 0){
+            if(terminal(pMax)==1){
+                result = 10;
+            }else if(terminal(pMax) == 2){
+                result = -10;
             }else{
-                System.out.print(".");
+                result = 0;
             }
-            if (i%3 == 2){
-                System.out.println();
-                System.out.println();
+        }else{
+            for (int i = 0; i <9; i++){
+                if(pMax.state[i] == '.'){
+                    Node child = new Node();
+                    child.state = pMax.state.clone();
+                    child.state[i] = 'x';
+                    int temp = mini(child);
+                    if(temp > result){
+                        result = temp;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    
+    // Max method, return max utility value
+    public static int mini(Node n){
+        int result =11;
+        Node pMini = new Node();
+        pMini.state = n.state.clone();
+        if(terminal(pMini) != 0){
+            if(terminal(pMini)==1){
+                result = 10;
+            }else if(terminal(pMini) == 2){
+                result = -10;
+            }else{
+                result = 0;
+            }
+        }else{
+            for (int i = 0; i <9; i++){
+                if(pMini.state[i] == '.'){
+                    Node child = new Node();
+                    child.state = pMini.state.clone();
+                    child.state[i] = 'o';
+                    int temp = max(child);
+                    if(temp < result){
+                        result = temp;
+                    }
+                }
+            }
+        }
+        return result;
+    }
+    public static Node nextStepMax(Node n){
+        Node parent = new Node();
+        parent.state = n.state.clone();
+        Node result = new Node();
+        int u = -11;
+        int temp = -11;
+        for(int i = 0; i < 9; i++){
+            if (parent.state[i] == '.'){
+                Node child = new Node();
+                child.state = parent.state.clone();
+                child.state[i] = 'x';
+                temp = mini(child);
+                if(u < temp){
+                    u = temp;
+                    result.state = child.state.clone();
+                }
+            }
+        }
+        return result;
+    }
+    public static Node nextStepMini(Node n){
+        Node parent = new Node();
+        parent.state = n.state.clone();
+        Node result = new Node();
+        int u = 11;
+        int temp = 11;
+        for(int i = 0; i < 9; i++){
+            if (parent.state[i] == '.'){
+                Node child = new Node();
+                child.state = parent.state.clone();
+                child.state[i] = 'o';
+                temp = max(child);
+                if(u > temp){
+                    u = temp;
+                    result.state = child.state.clone();
+                }
+            }
+        }
+        return result;
+    }
+    
+    //print for a node state
+    public static void printState(Node n){
+        for (int i =0; i < 9; i++){
+            System.out.print(n.state[i]);
+            if(i%3 == 2){
+                System.out.println("");
             }
         }
     }
-    public static Node miniMax(Node n, int check){
-    	Node result = new Node();
-    	int u = isTerminal(n);
-    	int miniOrmax = check % 2;
-    	int tempMax = -11;
-    	int tempMini = 11;
-    	int maxUtility = -11;
-    	int miniUtility = 11;
-    	if (u != 0){
-    		result.state = n.state.clone();
-    	}else if (miniOrmax == 0){
-    		for(int i =0; i < 9; i++){
-    			if(n.state[i] ==0){
-    				Node nextChild = new Node();
-    				nextChild.state = n.state.clone();
-    				nextChild.state[i] = 1;
-    				Node tempNode = new Node();
-    				tempNode.state = nextChild.state.clone();
-    				tempMax = min(tempNode);
-    				if(tempMax > maxUtility){
-    					result.state = nextChild.state;
-    					maxUtility = tempMax;
-    				}
-    			}
-    		}
-    	}else if(miniOrmax == 1){
-    		for(int i =0; i < 9; i++){
-    			if(n.state[i] ==0){
-    				Node nextChild = new Node();
-    				nextChild.state = n.state.clone();
-    				nextChild.state[i] = 2;
-    				Node tempNode2 = new Node();
-    				tempNode2.state = nextChild.state.clone();
-    				tempMini = max(tempNode2);
-    				if(tempMini < miniUtility){
-    					result.state = nextChild.state.clone();
-    					miniUtility = tempMini;
-    				}
-    				
-    			}
-    		}
-    	}
-    	
-    	
-    	
-    	return result;
-    }
     
     
-    
-    public static void main(String[] args){
-        int[] initState = {0,0,0,0,0,0,0,0,0};
-        Node initNode = new Node();
-        initNode.state= initState;
-        Node nextNode = new Node();
-
-        //printNode(initNode);
+    public static void main(String[] args) {
+        Node current = new Node();
+        char[] root = {'.','.','.','.','.','.','.','.','.'};
+        current.state = root.clone();
         
-        //nextNode.state = miniMax(initNode,0).state;
-        
-
-        for (int i =0;i<9;i++){
-            System.out.println("MinMax next steps: ");
-        	nextNode.state = miniMax(initNode,i).state.clone();
-            printNode(nextNode);
-            initNode.state = nextNode.state.clone();
+        int[] x = new int[9];
+        for (int i = 0; i <9; i++){
+            Node xChild = new Node();
+            xChild.state = current.state.clone();
+            xChild.state[i] = 'x';
+            int u = mini(xChild);
+            x[i] = u;
+        }
+        System.out.println("The MiniMax values for X's first move");
+        for (int i =0; i < 9; i++){
+            System.out.print(x[i]);
+            if(i%3 == 2){
+                System.out.println("");
+            }
+        }
+        System.out.println("The optimal play from the start to the end: ");
+        int m =0;
+        int step =1;
+        for(int i =0; i <9; i++){
+            int check = 0;
+            m = m % 2;
+            check = terminal(current);
+            Node next = new Node();
             
+            if(check != 0){
+                break;
+            }else if(m == 0){
+                next.state = nextStepMax(current).state.clone();
+            }else if(m ==1){
+                next.state = nextStepMini(current).state.clone();	
+            }
+            System.out.println("Step "+ step +": ");
+            printState(next);
+            System.out.println(" ");
+            current.state = next.state.clone();
+            m++;
+            step ++;
         }
-        /*int u =0;
-        for (int i = 0; i<9;i++){
-        	Node c = new Node();
-        	c.state = initState.clone();
-        	c.state[i] = 1;
-        	u = min(c);
-        	System.out.println(u);
-        	
-        }*/
-        /*int u = isTerminal(initNode);
-    	System.out.println(u);*/
-
+        
         
         
         
     }
-
-
 }
